@@ -3,49 +3,51 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 
 function CreateNote(props) {
-  const [expand,setExpand]=useState(false);
-  const expandIt=()=>{
-    setExpand(true);
-  }
-  const reduceIt=()=>{
-    setExpand(false);
-  }
-  const [note,setNote]=useState({
+  let [expand,setExpand]=useState(false);
+const [note,setNote]=useState({
+  title:"",
+  content:""
+})
+
+let inputEvent=(event)=>{
+  const {value,name}=event.target;
+  setNote(preVal=>{
+    return {
+      ...preVal,
+      [name]:value
+    }
+  })
+}
+
+let applyEvent=(e)=>{
+  e.preventDefault();
+  props.passNote(note);
+  setNote({
     title:"",
     content:""
-    });
+  })
+}
 
-    const inputEvent=(event)=>{
-      const{name, value }=event.target;
-      setNote(preVal=>{
-        return {
-          ...preVal,
-          [name]:value
-        }
-      })
-    }
+function expandIt() {
+  setExpand(true);
+}
+function reduceIt() {
+  setExpand(false);
+}
 
-    const addEvent=(e)=>{
-      
-      props.passNote(note);
-      setNote({
-        title:"",
-        content:""
-      })
-      e.preventDefault();
-    }
   return (
     <>
       <div className="main_note">
         <form>
-        {expand ? <input type={"text"} name="title" placeholder="Title" autoComplete="off" value={note.title} className="Title" onChange={inputEvent}/>:null}
-          
-          <textarea name="content" placeholder="Write a Note..." onClick={expandIt} onDoubleClick={reduceIt} style={{width:"100%",height:"550px"}} spellCheck="false" autoCorrect="false" onChange={inputEvent} value={note.content}
+        {expand ? <input type={"text"} name="title" placeholder="Title" autoComplete="off" onChange={inputEvent} value={note.title} className="Title"/> : null}
+        
+          <textarea name="content" placeholder="Write a Note..." style={{width:"100%",height:"550px"}} spellCheck="false" onChange={inputEvent} onClick={expandIt} onDoubleClick={reduceIt} autoCorrect="false" value={note.content}
           ></textarea>
 
-        {expand ? <Button varient="contained" className="plus_sign" onClick={addEvent}  style={{border:'1px solid #fbbc04',marginLeft:"auto",background:'#fbbc04'}}>
+        {expand ? <Button varient="contained" className="plus_sign" onClick={applyEvent} style={{border:'1px solid #fbbc04',marginLeft:"auto",background:'#fbbc04'}}>
             <AddIcon style={{color:"white"}}/>
-          </Button>:null}
+          </Button>: null}
+        
           
         </form>
       </div>
